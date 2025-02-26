@@ -33,11 +33,18 @@ async function startBot() {
             const messageKey = message.key; // Ambil messageKey untuk menghapus pesan
 
             if (text) {
-                const urlRegex = /https?:\/\/[^\s]+/g;
-                const urls = text.match(urlRegex);
+                // Update regex to match domains
+                const domainRegex = /\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}\b/gi;
+                const domains = text.match(domainRegex);
 
-                if (urls) {
-                    for (const url of urls) {
+                if (domains) {
+                    for (let domain of domains) {
+                        // Prepend http:// if the domain does not have a protocol
+                        let url = domain;
+                        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                            url = 'http://' + url;
+                        }
+
                         const isPhishing = await isPhishingUrl(url);
                         if (isPhishing) {
                             console.log(`Pesan phishing terdeteksi dari ${sender}: ${text}`);
