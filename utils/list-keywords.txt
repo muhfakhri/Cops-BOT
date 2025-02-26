@@ -1,0 +1,22 @@
+db.phishing_keywords.insertMany([
+  { keyword: "dana" },
+  { keyword: "bansos" },
+  { keyword: "loker" },
+  { keyword: "info-ind" },
+  { keyword: "kemensos" },
+  { keyword: "kominfo" },
+  { keyword: "bantuan" }
+]);
+
+db.phishing_keywords.insertMany([
+  { keyword: "dana" },
+  { keyword: "bansos" },
+  { keyword: "loker" },
+  { keyword: "info-ind" },
+  { keyword: "kemensos" },
+  { keyword: "kominfo" },
+  { keyword: "bantuan" }
+]);
+
+
+database name : phishingDB
