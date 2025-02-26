@@ -28,6 +28,18 @@ async function getBlacklistDomains() {
     }
 }
 
+async function getTrustedDomains() {
+    try {
+        await client.connect();
+        const database = client.db('phishingDB');
+        const collection = database.collection('trusted_domains');
+        const domains = await collection.find({}).toArray();
+        return domains.map(domain => domain.domain);
+    } finally {
+        await client.close();
+    }
+}
+
 // Fungsi untuk memeriksa URL menggunakan Google Safe Browsing API
 async function checkUrlWithSafeBrowsing(url) {
     const apiKey = process.env.GOOGLE_SAFE_BROWSING_API_KEY;
@@ -94,6 +106,18 @@ async function isBlacklistedDomain(url) {
     }
 }
 
+// Fungsi untuk mendeteksi domain terpercaya dalam URL
+async function isTrustedDomain(url) {
+    try {
+        const domain = new URL(url).hostname;
+        const trustedDomains = await getTrustedDomains();
+        return trustedDomains.includes(domain);
+    } catch (error) {
+        console.error('URL tidak valid:', url);
+        return false;
+    }
+}
+
 // Fungsi utama untuk memeriksa URL
 async function isPhishingUrl(url) {
     // Periksa apakah URL valid
@@ -101,6 +125,10 @@ async function isPhishingUrl(url) {
         console.error('URL tidak ditemukan atau tidak valid.');
         return false;
     }
+
+    // Periksa apakah domain terpercaya
+    const isTrusted = await isTrustedDomain(url);
+    if (isTrusted) return false;
 
     // Periksa menggunakan Google Safe Browsing
     const isSafeBrowsingPhishing = await checkUrlWithSafeBrowsing(url);

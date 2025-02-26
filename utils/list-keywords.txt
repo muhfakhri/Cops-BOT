@@ -18,5 +18,11 @@ db.phishing_keywords.insertMany([
   { keyword: "bantuan" }
 ]);
 
+db.trusted_domains.insertMany([
+    { domain: "dana.com" },
+    { domain: "kemensos.go.id" },
+    { domain: "securewebsite.org" }
+])
+
 
 database name : phishingDB
